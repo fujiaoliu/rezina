@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {background-color: lightgray;}
+.head {
+margin: auto;
+color: 'gray';
+}
+
+h1 {
+    text-align: center;
+    margin: 80px auto;
+    color: #ff5722;
+    font-size: 74px;
+}
+p {
+font-size: 24px;
+text-align: center;
+margin: 16px auto;
+}
+span {
+color: #0d96f1;
+font-weight: bold;
+}
+
+a {
+text-decoration: none;
+color: deeppink;
+}
+a:hover {
+color: white;
+}
+</style>
+</head>
+<body>
+
+<h1>404</h1>
+<p>Use <span>rezina-master-ip:31218</span> to access Rezina Web.</p>
+<p>If rezina master is runnng on this server, goto <a id=rezina> Rezian Web</a></p>
+<p>Please contact me if there are any problems.</p>
+
+<script>
+var url = document.URL.split('/') ;
+var rezina = url.slice(0, 3).join('/')
+document.getElementById("rezina").href = rezina;
+</script>
+
+</body>
+</html>

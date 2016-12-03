@@ -1,0 +1,11 @@
+*.pyc
+*.swp
+.DS_Store
+.cache
+rezina.egg-info
+*.s
+dist
+.tox
+.coverage
+build/
+__pycache__
