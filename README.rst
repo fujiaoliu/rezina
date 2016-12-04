@@ -1,7 +1,7 @@
 Rezina
 =======
 
-rezina is a scalable, distributed and easy to use system for executing python code in parallel across multiple processors or many machines.  It provides a simple way to make parallel programming in python more easier, flexible and scalable and shipped with  features like periodically schedule, load balance, fail tolerate, dynamically add tasks and save result to backend.
+rezina is a scalable, distributed and easy to use system for executing python code in parallel across multiple processors or many machines.  It provides a simple way to make parallel programming in python more easier, flexible and scalable and shipped with  features like periodically schedule, load balance, fail tolerate, dynamically add tasks and save results to backend.
 
 why use rezina?
 ================
@@ -62,7 +62,7 @@ Dependencies
 
 rezina requires `pyzmq <https://github.com/zeromq/pyzmq>`_ for message transports.
 
-pyzmq is python bindings for `ØMQ <http://zeromq.org/>`_. ØMQ is a lightweight and fast messaging implementation.
+ pyzmq is python bindings for `ØMQ <http://zeromq.org/>`_. ØMQ is a lightweight and fast messaging implementation.
 
 Installaion
 =============
@@ -99,20 +99,23 @@ or
 Quick Guide
 ==============
 
-Start rezina
+Start rezina 
 ---------------
 
 Once rezina is installed, you can run
 
 ``rezina-cli runmaster -H master_ip``
 
-to start rezina master, and run
+to start rezina master.
+
+
+After master started, you could run
 
 ``rezina-cli runworker -H master_ip -WIP worker_ip``
 
-to start rezina worker
+to start rezina worker.
 
-.. note:: we could use `-D` to run master as daemon and `-W` to specify a new workspace. please see documentation for starting rezina correctly.
+ we could use `-D` to run master as daemon and `-W` to specify a new workspace. please see `startup settings <http://rezina.readthedocs.io/en/latest/startupsettings.html#startup-setttings>`_ for starting rezina correctly.
 
 Example cityweather
 --------------------
@@ -175,9 +178,9 @@ Build a typology to run cityweather with rezina
 
 script name: ``weathertypo.py``
 
-put it info rezina workspace
+put it info rezina workspace (``~/rezina/workspace`` by default)
 
-.. hint:: you could regard hydrant, notch, bocca as input, filter, output respectively for now. A typology looks like `input | filter1 | filter2 | output` in shell. check the Documentation for more info.
+ you could regard hydrant, notch, bocca as input, filter, output respectively for now. A typology looks like `input | filter1 | filter2 | output` in shell. check the Documentation for more info.
 
 
 run ``get_city_weather`` function with 2 processes and every process run 5 threads and each thread fetch one city.
@@ -188,13 +191,12 @@ run ``one_word_conditions_for_city`` function with 1 process with 1 thread becau
 
     #!/usr/bin/env python
 
-    from rezina.utils.network import get_ip
     from rezina import TypologyBuilder
     from rezina.backends import Stdout
 
     from cityweather import get_cities, get_city_weather, one_word_conditions_for_city
 
-    ip = get_ip()  # get master_ip
+    ip = master_ip  # your master_ip
     tb = TypologyBuilder(ip, 12345, 'weather_typo2')
     tb.add_hydrant(get_cities)
     tb.add_notch(get_city_weather, 2, 5)
@@ -202,19 +204,27 @@ run ``one_word_conditions_for_city`` function with 1 process with 1 thread becau
     tb.add_bocca(Stdout, persistent_mode='stream')
 
     if __name__ == "__main__":
-        tb.restart(interval=10)
+        tb.restart(start_time="2016-12-03 20:18:10", interval=10)
 
+
+replace ``ip = master_ip`` to ``ip = your_real_master_ip``, for example ``ip = '127.0.0.1'``. 
+you could change ``start_time`` in ``tb.restart``, time string format ``%Y-%m-%d %H:%M:%S``
+ 
+see `periodically schedule <http://rezina.readthedocs.io/en/latest/periodicallyschedule.html#periodically-schedule>`_
 
 run typology
 ^^^^^^^^^^^^
 
 rezina typology file is just a python script, run it with
 
-``python weathertypo.py`` or ``./weathertypo.py``` and you get the results.
+``python weathertypo.py`` or ``./weathertypo.py``` and you get the results. 
 
-you could also save the results of your typology to another backend rather than print them.
+Press ``ctrl-c`` to stop.
+
+You could also save the results of your typology to another backend rather than print them.
 
 See documentation for more details.
+
 
 rezina console
 ----------------
@@ -231,3 +241,17 @@ Documentation
 ================
 
 See http://rezina.readthedocs.io/en/latest/ for more info.
+
+
+Rezina-Web
+===========
+
+rezina-web is the web console of rezina powered by Angular2, Webpack.js, Angular Material2.
+
+see `rezina-web <https://github.com/fujiaoliu/rezina-web>`_  project.
+
+
+.. image:: https://cloud.githubusercontent.com/assets/1925552/20864262/8ebefafa-ba24-11e6-8a3d-35fe271d43c3.png
+    :width: 1280px
+    :align: center
+
